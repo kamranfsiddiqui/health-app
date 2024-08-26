@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>22</java.version>
+		<start-class>com.kfs.health_app.HealthAppApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -77,6 +78,11 @@
 			<version>7.8.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.6</version>
+		</dependency>
+		<dependency>
 			<groupId>com.squareup.okio</groupId>
 			<artifactId>okio</artifactId>
 			<version>3.9.0</version>
@@ -117,6 +123,18 @@
 			<version>1.2</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -139,9 +157,11 @@
 						</goals>
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
-							<generatorName>java</generatorName>
+							<generatorName>spring</generatorName>
+							<modelPackage>com.kfs.health_app.model</modelPackage>
+							<apiPackage>com.kfs.health_app.api</apiPackage>
 							<configOptions>
-								<sourceFolder>target/generated-sources</sourceFolder>
+								<delegatePattern>true</delegatePattern>
 							</configOptions>
 						</configuration>
 					</execution>

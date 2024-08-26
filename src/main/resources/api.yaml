@@ -3,18 +3,9 @@ info:
   title: Health App
   version: "1.0"
   description: |-
-    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
-    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
-    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
-    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
-
-    _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
-    
-    Some useful links:
-    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
-    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+    My health app. Right now only supports tracking workouts.
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: https://health-app.com/api/v1
 tags:
   - name: user
     description: operations about users
@@ -123,15 +114,15 @@ paths:
       responses:
         default:
           description: successful operation
-  /user/{username}:
+  /user/{userId}:
     get:
       tags:
         - user
       summary: Get user by user name
       description: ''
-      operationId: getUserByName
+      operationId: getUserById
       parameters:
-        - name: username
+        - name: userId
           in: path
           description: 'The name that needs to be fetched. Use user1 for testing. '
           required: true
@@ -158,9 +149,9 @@ paths:
       description: This can only be done by the logged in user.
       operationId: updateUser
       parameters:
-        - name: username
+        - name: userId
           in: path
-          description: name that need to be deleted
+          description: 'The name that needs to be fetched. Use user1 for testing. '
           required: true
           schema:
             type: string
@@ -186,9 +177,9 @@ paths:
       description: This can only be done by the logged in user.
       operationId: deleteUser
       parameters:
-        - name: username
+        - name: userId
           in: path
-          description: The name that needs to be deleted
+          description: 'The name that needs to be fetched. Use user1 for testing. '
           required: true
           schema:
             type: string
@@ -237,7 +228,7 @@ paths:
   /workout/{id}/setGroup:
     post:
       tags:
-        - setgroup
+        - workout
       summary: Create a group of sets
       operationId: createSetGroup
       parameters:
@@ -256,30 +247,10 @@ paths:
       responses:
         '200':
           description: success
-  /setGroup/{id}:
-    get:
-      tags:
-        - setgroup
-      summary: get info about the set-group with the given id
-      operationId: getSetGroupById
-      parameters:
-        - name: id
-          in: path
-          description: The id of the set-group we want add more sets to
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-            description: success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/SetGroup'
+  /workout/{id}/setGroup/{groupId}:
     post:
       tags:
-        - setgroup
+        - workout
       summary: add a new group of sets to the set group with the given id
       operationId: setGroupAddSets
       parameters:
@@ -290,6 +261,13 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: groupId
+          in: path
+          description: The id of the set-group we want add more sets to
+          required: true
+          schema:
+            type: integer
+            format: int32
       requestBody:
         content:
           application/json:
