@@ -6,6 +6,7 @@ info:
     My health app. Right now only supports tracking workouts.
 servers:
   - url: https://health-app.com/api/v1
+  - url: localhost:8080/api/v1
 tags:
   - name: user
     description: operations about users
@@ -188,12 +189,43 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
-  /workout:
+  /workout/user/{userId}:
+    get:
+      tags:
+        - workout
+      summary: get all workouts for user given by the param userId
+      operationId: getWorkoutByUserId
+      parameters:
+        - name: userId
+          in: path
+          description: the id of the current user
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Workout"
+
     post:
       tags:
         - workout
-      summary: create a new workout
+      summary: create a new workout for user given by the param userId
       operationId: createWorkout
+      parameters:
+        - name: userId
+          in: path
+          description: the id of the current user
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -202,43 +234,27 @@ paths:
       responses:
         '200':
           description: Success
-
-  /workout/user/{id}:
-    get:
-      tags:
-        - workout
-      summary: get info about workout associated with the given id
-      operationId: getWorkoutByUserId
-      parameters:
-        - name: id
-          in: path
-          description: The id of the set-group we want add more sets to
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SetGroup'
-      responses:
-        '200':
-          description: Success
-  /workout/{id}/setGroup:
+  /workout/{id}/user/{userId}/setGroup:
     post:
       tags:
         - workout
-      summary: Create a group of sets
+      summary: Create a new set group for this users workout
       operationId: createSetGroup
       parameters:
         - name: id
           in: path
-          description: The id of the set-group we want add more sets to
+          description: The id of the workout we want add more sets to
           required: true
           schema:
             type: integer
             format: int64
+        - name: userId
+          in: path
+          description: the id of the current user
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         content:
           application/json:
@@ -326,8 +342,19 @@ components:
           type: array
           items:
               $ref: '#/components/schemas/SetGroup'
-
     SetGroup:
+      type: object
+      properties:
+        setGroupId:
+          type: integer
+          format: int32
+
+        sets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Set'
+
+    Set:
       type: object
       properties:
         totalSets:
@@ -350,6 +377,7 @@ components:
         unitID:
           type: integer
           format: int32
+
 
   requestBodies:
     UserArray:

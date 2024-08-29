@@ -1,6 +1,12 @@
 server:
   port: 8080
 
+datasources:
+  health:
+    driver: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/kfs_health
+    user: postgres
+    password: P0$tgr3sKamran
 
 spring:
   application:
