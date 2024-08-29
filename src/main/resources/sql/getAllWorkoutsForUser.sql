@@ -1,13 +1,12 @@
-SELECT "WkID",
-       s."SetGroupID",
+SELECT "WkID" AS workoutId,
+       s."SetGroupID" AS setGroupId,
+       "SetExID" AS exerciseId,
+       "ExName" AS exercise,
        COUNT("SetID") AS setCount,
-       ARRAY_AGG("SetExID"),
-       ARRAY_AGG("SetRepetitions"),
-       ARRAY_AGG("SetWeight"),
-       ARRAY_AGG("SetRPE"),
-       ARRAY_AGG("SetCompletedTime"),
-       ARRAY_AGG("SetRest"),
-       "ExName"
+       ARRAY_AGG("SetRepetitions") AS repetitions,
+       ARRAY_AGG("SetWeight") AS weights,
+       ARRAY_AGG("SetRPE") AS intensities,
+       ARRAY_AGG("SetRest") AS restPeriods
 FROM public."tblWorkouts" AS w
 LEFT JOIN public."tblSetGroups" AS sg
        ON "WkID" = "SetGroupWkID"

@@ -259,7 +259,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetGroup'
+              $ref: '#/components/schemas/SetExerciseGroup'
       responses:
         '200':
           description: success
@@ -288,7 +288,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetGroup'
+              $ref: '#/components/schemas/SetExerciseGroup'
       responses:
         '200':
           description: Success
@@ -330,6 +330,9 @@ components:
     Workout:
       type: object
       properties:
+        workoutId:
+          type: integer
+          format: int32
         userId:
           type: string
           format: uuid
@@ -341,22 +344,13 @@ components:
         setGroups:
           type: array
           items:
-              $ref: '#/components/schemas/SetGroup'
-    SetGroup:
+              $ref: '#/components/schemas/SetExerciseGroup'
+    SetExerciseGroup:
       type: object
       properties:
         setGroupId:
           type: integer
           format: int32
-
-        sets:
-          type: array
-          items:
-            $ref: '#/components/schemas/Set'
-
-    Set:
-      type: object
-      properties:
         totalSets:
           type: integer
           format: int32
@@ -367,16 +361,22 @@ components:
             type: integer
             format: int32
           example: [10, 8, 8]
-        weight:
+        weights:
           type: array
           items:
             type: number
             format: float
             example: 22.5
           example: [22.5, 25, 25]
-        unitID:
-          type: integer
-          format: int32
+        exercise:
+          type: string
+          example: "squat"
+        unit:
+          type: string
+          example: "pound"
+        unitAbbreviation:
+          type: string
+          example: "lb"
 
 
   requestBodies:
