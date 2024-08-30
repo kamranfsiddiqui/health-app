@@ -31,7 +31,11 @@ public class HealthAppController implements WorkoutApi {
      */
     @Override
     public ResponseEntity<List<Workout>> getWorkoutByUserId(UUID userId) {
-        List<Workout> workouts = this.workoutRepository.getAllWorkoutsByUserId(userId.toString());
-        return ResponseEntity.ok().header("custom-header", "foo").body(workouts);
+        try {
+            List<Workout> workouts = this.workoutRepository.getAllWorkoutsByUserId(userId.toString());
+            return ResponseEntity.ok().header("custom-header", "foo").body(workouts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

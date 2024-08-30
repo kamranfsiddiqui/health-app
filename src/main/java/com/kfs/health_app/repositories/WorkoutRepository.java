@@ -13,12 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 public class WorkoutRepository {
@@ -30,7 +26,7 @@ public class WorkoutRepository {
         this.healthJdbcTemplate = healthJdbcTemplate;
     }
 
-    public List<Workout> getAllWorkoutsByUserId(String userId) {
+    public List<Workout> getAllWorkoutsByUserId(String userId) throws WorkoutRepositoryException {
         SqlParameterSource params = new MapSqlParameterSource("userId", userId);
         List<Workout> workouts = List.of();
         try {
@@ -38,6 +34,8 @@ public class WorkoutRepository {
             workouts = this.transformRawSetData(rawSetData);
         } catch (DataAccessException e) {
             return List.of();
+        } catch (Exception e) {
+            throw new WorkoutRepositoryException(e);
         }
         return workouts;
     }
@@ -57,22 +55,16 @@ public class WorkoutRepository {
                     rs.getInt("exerciseId"),
                     rs.getString("exercise"),
                     rs.getInt("setCount"),
-                    Stream.of(rs.getString("repetitions").split(","))
-                            .map(Integer::parseInt)
-                            .collect(Collectors.toList()),
-                    Stream.of(rs.getString("weights").split(","))
-                            .map(Float::parseFloat)
-                            .collect(Collectors.toList()),
-                    Stream.of(rs.getString("intensities").split(","))
-                            .map(Integer::parseInt)
-                            .collect(Collectors.toList()),
-                    Stream.of(rs.getString("restPeriods").split(","))
-                            .map(Integer::parseInt)
-                            .collect(Collectors.toList())
+                    Arrays.asList((Short[]) rs.getArray("repetitions").getArray()),
+                    Arrays.asList((Float[]) rs.getArray("weights").getArray()),
+                    Arrays.asList((Short[]) rs.getArray("intensities").getArray()),
+                    Arrays.asList((Short[]) rs.getArray("restPeriods").getArray())
             );
             return setExerciseGroup;
         }
     }
+
+
 
     private List<Workout> transformRawSetData(List<SetExerciseGroupDto> rawSetData) {
         Map<Integer, List<SetExerciseGroup>> workoutMap = new LinkedHashMap<>();
@@ -80,8 +72,9 @@ public class WorkoutRepository {
             SetExerciseGroup newGroup = new SetExerciseGroup()
                     .setGroupId(setGroupDto.setGroupId())
                     .totalSets(setGroupDto.setCount())
-                    .repetitions(setGroupDto.repetitions())
-                    .weights(setGroupDto.weights());
+                    .repetitions(setGroupDto.repetitions().get(0) != null ? setGroupDto.repetitions().stream().map(Integer::valueOf).collect(Collectors.toList()) : List.of())
+                    .weights(setGroupDto.weights())
+                    .exercise(setGroupDto.exercise());
             if(!workoutMap.containsKey(setGroupDto.workoutId())) {
                 workoutMap.put(setGroupDto.workoutId(), new ArrayList<>());
             }

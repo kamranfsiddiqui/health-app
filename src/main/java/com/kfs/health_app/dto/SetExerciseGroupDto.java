@@ -8,8 +8,8 @@ public record SetExerciseGroupDto(
     int exerciseId,
     String exercise,
     int setCount,
-    List<Integer> repetitions,
+    List<Short> repetitions,
     List<Float> weights,
-    List<Integer> intensities,
-    List<Integer> restPeriods
+    List<Short> intensities,
+    List<Short> restPeriods
 ) { }
