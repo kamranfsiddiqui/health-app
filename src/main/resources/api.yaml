@@ -340,8 +340,8 @@ components:
           type: string
         completionDate:
           type: string
-          format: date
-        setGroups:
+          format: date-time
+        setExerciseGroups:
           type: array
           items:
               $ref: '#/components/schemas/SetExerciseGroup'
@@ -351,6 +351,9 @@ components:
         setGroupId:
           type: integer
           format: int32
+        exercise:
+          type: string
+          example: "squat"
         totalSets:
           type: integer
           format: int32
@@ -368,16 +371,29 @@ components:
             format: float
             example: 22.5
           example: [22.5, 25, 25]
-        exercise:
-          type: string
-          example: "squat"
         unit:
           type: string
           example: "pound"
         unitAbbreviation:
           type: string
           example: "lb"
-
+        restPeriods:
+          type: array
+          description: rest period in seconds
+          items:
+            type: integer
+            format: int32
+          example: [60, 90, 60]
+        intensities:
+          type: array
+          items:
+            type: integer
+            format: int32
+          example: [7, 8, 8]
+          description: ratings of perceived exertion of each set. Scale of 1 to 10.
+        notes:
+          type: string
+          description: Any notes about how this set exercise set group
 
   requestBodies:
     UserArray:

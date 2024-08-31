@@ -2,7 +2,7 @@ package com.kfs.health_app.controllers;
 
 import com.kfs.health_app.generated.api.WorkoutApi;
 import com.kfs.health_app.generated.model.Workout;
-import com.kfs.health_app.repositories.WorkoutRepository;
+import com.kfs.health_app.services.WorkoutService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +14,15 @@ import java.util.UUID;
 @RestController
 public class HealthAppController implements WorkoutApi {
 
-    public WorkoutRepository workoutRepository;
+    public WorkoutService workoutService;
 
-    public HealthAppController(WorkoutRepository workoutRepository) {
-        this.workoutRepository = workoutRepository;
+    public HealthAppController(WorkoutService workoutService) {
+        this.workoutService = workoutService;
     }
 
-
-    @GetMapping("/test")
+    @GetMapping("/health")
     public ResponseEntity<String> test() {
-        return new ResponseEntity<>("WORKING--------fdasfasdfadsfasdfa", HttpStatus.OK);
+        return new ResponseEntity<>("Health App API is up and running", HttpStatus.OK);
     }
     /**
      * @param userId the id of the current user (required)
@@ -32,7 +31,7 @@ public class HealthAppController implements WorkoutApi {
     @Override
     public ResponseEntity<List<Workout>> getWorkoutByUserId(UUID userId) {
         try {
-            List<Workout> workouts = this.workoutRepository.getAllWorkoutsByUserId(userId.toString());
+            List<Workout> workouts = this.workoutService.getWorkoutsByUserId(userId.toString());
             return ResponseEntity.ok().header("custom-header", "foo").body(workouts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

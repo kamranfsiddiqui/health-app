@@ -1,18 +1,25 @@
+
 SELECT "WkID" AS workoutId,
+       "WkName" AS workoutName,
+       "WkDateCompleted" AS completionDate,
+       "WkUserID" AS userId,
        s."SetGroupID" AS setGroupId,
-       "SetExID" AS exerciseId,
        "ExName" AS exercise,
        COUNT("SetID") AS setCount,
        ARRAY_AGG("SetRepetitions") AS repetitions,
        ARRAY_AGG("SetWeight") AS weights,
        ARRAY_AGG("SetRPE") AS intensities,
-       ARRAY_AGG("SetRest") AS restPeriods
+       ARRAY_AGG("SetRest") AS restPeriods,
+       "UnitName" AS unit,
+       "UnitShortName" AS unitShortName
 FROM public."tblWorkouts" AS w
-LEFT JOIN public."tblSetGroups" AS sg
-       ON "WkID" = "SetGroupWkID"
-LEFT JOIN public."tblSets" AS s
-       ON sg."SetGroupID" = s."SetGroupID"
-LEFT JOIN public."tblExercises" AS ex
-       ON s."SetExID" = ex."ExID"
-WHERE "WkUserID" = '68c283d8-43a4-4b89-8af5-3be8768184fe'
-GROUP BY "WkID", s."SetGroupID", "SetExID", "ExName";
+         LEFT JOIN public."tblSetGroups" AS sg
+                   ON "WkID" = "SetGroupWkID"
+         LEFT JOIN public."tblSets" AS s
+                   ON sg."SetGroupID" = s."SetGroupID"
+         LEFT JOIN public."tblExercises" AS ex
+                   ON s."SetExID" = ex."ExID"
+         LEFT JOIN public."tblUnit" AS u
+                   ON "SetUnitID" = "UnitID"
+WHERE "WkUserID"::text = :userId
+GROUP BY "WkID",completionDate, userId, s."SetGroupID", "ExName", unit, unitShortName;
