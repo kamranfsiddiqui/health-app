@@ -53,7 +53,7 @@ public class WorkoutService {
             if(!workoutMap.containsKey(workoutId)) {
                 OffsetDateTime completionDate = OffsetDateTime.parse(
                         setGroupDto.completionDate(),
-                        DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSSSSSxxx"));
+                        DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss[.[SSSSSSSSS][SSSSSSSS][SSSSSSS][SSSSSS][SSSSS][SSSS][SSS][SS][S]]X"));
 
                 Workout workout = new Workout()
                         .workoutId(workoutId)
