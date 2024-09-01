@@ -212,7 +212,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Workout"
-
     post:
       tags:
         - workout
@@ -259,7 +258,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetGroup'
+              $ref: '#/components/schemas/SetExerciseGroup'
       responses:
         '200':
           description: success
@@ -288,7 +287,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetGroup'
+              $ref: '#/components/schemas/SetExerciseGroup'
       responses:
         '200':
           description: Success
@@ -330,6 +329,9 @@ components:
     Workout:
       type: object
       properties:
+        workoutId:
+          type: integer
+          format: int32
         userId:
           type: string
           format: uuid
@@ -337,26 +339,20 @@ components:
           type: string
         completionDate:
           type: string
-          format: date
-        setGroups:
+          format: date-time
+        setExerciseGroups:
           type: array
           items:
-              $ref: '#/components/schemas/SetGroup'
-    SetGroup:
+              $ref: '#/components/schemas/SetExerciseGroup'
+    SetExerciseGroup:
       type: object
       properties:
         setGroupId:
           type: integer
           format: int32
-
-        sets:
-          type: array
-          items:
-            $ref: '#/components/schemas/Set'
-
-    Set:
-      type: object
-      properties:
+        exercise:
+          type: string
+          example: "squat"
         totalSets:
           type: integer
           format: int32
@@ -367,17 +363,36 @@ components:
             type: integer
             format: int32
           example: [10, 8, 8]
-        weight:
+        weights:
           type: array
           items:
             type: number
             format: float
             example: 22.5
           example: [22.5, 25, 25]
-        unitID:
-          type: integer
-          format: int32
-
+        unit:
+          type: string
+          example: "pound"
+        unitAbbreviation:
+          type: string
+          example: "lb"
+        restPeriods:
+          type: array
+          description: rest period in seconds
+          items:
+            type: integer
+            format: int32
+          example: [60, 90, 60]
+        intensities:
+          type: array
+          items:
+            type: integer
+            format: int32
+          example: [7, 8, 8]
+          description: ratings of perceived exertion of each set. Scale of 1 to 10.
+        notes:
+          type: string
+          description: Any notes about how this set exercise set group
 
   requestBodies:
     UserArray:
