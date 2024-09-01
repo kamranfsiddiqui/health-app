@@ -24,6 +24,17 @@ public class HealthAppController implements WorkoutApi {
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("Health App API is up and running", HttpStatus.OK);
     }
+
+    /**
+     * @param userId  the id of the current user (required)
+     * @param workout (optional)
+     * @return
+     */
+    @Override
+    public ResponseEntity<Void> createWorkout(UUID userId, Workout workout) {
+        return WorkoutApi.super.createWorkout(userId, workout);
+    }
+
     /**
      * @param userId the id of the current user (required)
      * @return
